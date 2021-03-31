@@ -1,0 +1,90 @@
+﻿@model ToDo.Models.ToDoView
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Text, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+<table class="table">
+    @foreach (var item in Model.list)
+    {
+        <tr>
+            @{ if (item.Done == 0)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Text)
+                    </td>
+                }
+                else
+                {
+                    <td style="color: red;">
+                        @Html.DisplayFor(modelItem => item.Text)
+                    </td>
+                }
+            }
+            <td>
+                @{ if (item.Done == 1)
+                    {
+                        <p style="user-select:none">✓</p>
+                    }
+                    else
+                    {<p style="user-select:none" onclick="finish(@item.Id)">X</p>}
+                }
+            </td>
+            <td>
+                <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.toDel, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.toDel, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+                <button class="delBtn" >Delete</button>
+            </td>
+        </tr>
+    }
+</table>
+
+<script>
+    /*function finish(a) {
+        $.get("Home/Index?id=" + a)
+        window.location.reload();
+    }*/
+</script>
+<style>
+    .delBtn {
+        background-color: transparent;
+        border-color: transparent;
+        font-family: sans-serif;
+    }
+</style>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
