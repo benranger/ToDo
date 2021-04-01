@@ -28,27 +28,29 @@
         <tr>
             @{ if (item.Done == 0)
                 {
-                    <td>
+                    <td class="td1">
                         @Html.DisplayFor(modelItem => item.Text)
                     </td>
                 }
                 else
                 {
-                    <td style="color: red;">
+                    <td class="td1" style="color: red;">
                         @Html.DisplayFor(modelItem => item.Text)
                     </td>
                 }
             }
-            <td>
+            <td class="td2">
                 @{ if (item.Done == 1)
                     {
                         <p style="user-select:none">✓</p>
                     }
                     else
-                    {<p style="user-select:none" onclick="finish(@item.Id)">X</p>}
+                    {
+                        <p style="user-select:none" onclick="finish(@item.Id)">X</p>
+                    }
                 }
             </td>
-            <td>
+            <td class="td3">
                 @using (Html.BeginForm())
                 {
                     @Html.AntiForgeryToken()
@@ -80,6 +82,7 @@
         $.get("Home/Index?id=" + a)
         window.location.reload();
     }*/
+    document.onload = "";
 </script>
 <style>
     .delBtn {
