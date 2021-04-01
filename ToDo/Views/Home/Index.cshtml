@@ -49,25 +49,28 @@
                 }
             </td>
             <td>
-                <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.toDel, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.toDel, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-                <button class="delBtn" >Delete</button>
-            </td>
+                        <div class="form-group" style="display: none">
+                            <div class="col-md-10">
+                                <input class="form-control text-box single-line" data-val="true" data-val-number="The field must be a number." data-val-required="The field is required." id="toDel" name="toDel" type="number" value="1">
+                                <input class="form-control text-box single-line" data-val="true" data-val-number="The field Id must be a number." data-val-required="The id field is required." id="Id" name="Id" type="number" value="@item.Id">
+                                @Html.ValidationMessageFor(model => model.toDel, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Delete" class="btn delBtn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+                }
+                </td>
         </tr>
     }
 </table>

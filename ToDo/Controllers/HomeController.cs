@@ -42,16 +42,28 @@ namespace ToDo.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(ToDoItem item)
         {
-            ViewBag.Title = "Index";
-            ToDoView item1 = new ToDoView();
-            item1.Id = getId();
-            item1.Text = item.Text;
-            item1.Done = item.Done;
-            string sql = @"insert into dbo.Tasks (Id, Text, Done) values (@Id, @Text, @Done)";
-            using (IDbConnection cnn = new SqlConnection(connString("db1")))
+            if (item.Text != null)
             {
-                cnn.Execute(sql, item1);
+                ViewBag.Title = "Index";
+                ToDoView item1 = new ToDoView();
+                item1.Id = getId();
+                item1.Text = item.Text;
+                item1.Done = item.Done;
+                string sql = @"insert into dbo.Tasks (Id, Text, Done) values (@Id, @Text, @Done)";
+                using (IDbConnection cnn = new SqlConnection(connString("db1")))
+                {
+                    cnn.Execute(sql, item1);
+                }
             }
+            else
+            {
+                string sql = @"DELETE FROM dbo.Tasks WHERE Id="+item.Id;
+                using (IDbConnection cnn = new SqlConnection(connString("db1")))
+                {
+                    cnn.Execute(sql);
+                }
+            }
+
             return Index();
         }
 
@@ -59,16 +71,7 @@ namespace ToDo.Controllers
         {
             using (IDbConnection cnn = new SqlConnection(connString("db1")))
             {
-                string sql = @"DELETE FROM dbo.Tasks where Id='"+id+"'";
-                cnn.Execute(sql);
-            }
-        }
-        [HttpPost]
-        public void Index(int id)
-        {
-            using (IDbConnection cnn = new SqlConnection(connString("db1")))
-            {
-                string sql = @"UPDATE dbo.Tasks SET Done=1 where Id='" + id + "'";
+                string sql = @"DELETE FROM dbo.Tasks where Id='" + id + "'";
                 cnn.Execute(sql);
             }
         }
