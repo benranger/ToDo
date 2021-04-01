@@ -4,17 +4,15 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <hr />
+    <div class="form-horizontal create-item">
+        
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Text, new { htmlAttributes = new { @class = "form-control" } })
-                
-            </div>
+    <div class="form-group" >
+        <div class="col-md-10">
+            <input class="form-control aa text-box single-line valid" data-val="true" data-val-required="Please enter a Task" id="Text" name="Text" type="text" value="" aria-describedby="Text-error" aria-invalid="false">
         </div>
-
+    </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
@@ -23,6 +21,10 @@
     </div>
 }
 <table class="table">
+    @if (Model.list.Count == 0)
+    {
+        <caption>The To-Do List is empty.</caption>
+    }
     @foreach (var item in Model.list)
     {
         <tr>
@@ -39,17 +41,37 @@
                     </td>
                 }
             }
-            <td class="td2">
+        <td class="td2">
                 @{ if (item.Done == 1)
+                {
+                    <p style="user-select:none">✓</p>
+                }
+                else
+                {
+                    using (Html.BeginForm())
                     {
-                        <p style="user-select:none">✓</p>
-                    }
-                    else
-                    {
-                        <p style="user-select:none" onclick="finish(@item.Id)">X</p>
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <div class="form-group" style="display: none">
+                                <div class="col-md-10">
+                                    <input class="form-control text-box single-line" data-val="true" data-val-number="The field must be a number." data-val-required="The field is required." id="toFin" name="toFin" type="number" value="1">
+                                    <input class="form-control text-box single-line" data-val="true" data-val-number="The field Id must be a number." data-val-required="The id field is required." id="Id" name="Id" type="number" value="@item.Id">
+                                    @Html.ValidationMessageFor(model => model.toFin, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="✖" class="delBtn" />
+                                </div>
+                            </div>
+                        </div>
                     }
                 }
-            </td>
+            }
+        </td>
             <td class="td3">
                 @using (Html.BeginForm())
                 {
@@ -76,20 +98,24 @@
         </tr>
     }
 </table>
-
-<script>
-    /*function finish(a) {
-        $.get("Home/Index?id=" + a)
-        window.location.reload();
-    }*/
-    document.onload = "";
-</script>
 <style>
     .delBtn {
         background-color: transparent;
         border-color: transparent;
         font-family: sans-serif;
     }
+    .create-item {
+        display: flex;
+        justify-content: flex-start;
+        align-content: flex-start;
+        padding: 20px 0;
+    }
+    .aa {
+        width: 160px;
+    }
+    .td1 {width: 50%!important}
+    .td2 {width: 15%!important}
+    .td3 {width: 35%!important}
 </style>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

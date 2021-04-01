@@ -16,5 +16,6 @@ namespace ToDo.Models
         public int Done { get; set; }
         public List<ToDoItem> list { get; set; }
         public int toDel { get; set; }
+        public int toFin { get; set; }
     }
 }

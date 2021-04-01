@@ -44,24 +44,37 @@ namespace ToDo.Controllers
         {
             if (item.Text != null)
             {
-                ViewBag.Title = "Index";
-                ToDoView item1 = new ToDoView();
-                item1.Id = getId();
-                item1.Text = item.Text;
-                item1.Done = item.Done;
-                string sql = @"insert into dbo.Tasks (Id, Text, Done) values (@Id, @Text, @Done)";
+                //Collect existing items from DB
+                List<string> list1 = new List<string>();
+                string sql1 = @"SELECT Text from dbo.Tasks";
                 using (IDbConnection cnn = new SqlConnection(connString("db1")))
                 {
-                    cnn.Execute(sql, item1);
+                    list1 = cnn.Query<string>(sql1).ToList();
+                }
+
+                //Create Item
+                if (!list1.Contains(item.Text))
+                {
+                    ViewBag.Title = "Index";
+                    item.Id = getId();
+                    string sql = @"insert into dbo.Tasks (Id, Text, Done) values (@Id, @Text, @Done)";
+                    using (IDbConnection cnn = new SqlConnection(connString("db1")))
+                    {
+                        cnn.Execute(sql, item);
+                    }
                 }
             }
+            //To Delete
+            else if (item.Done != 1)
+            {
+                string sql = @"DELETE FROM dbo.Tasks WHERE Id=" + item.Id;
+                using (IDbConnection cnn = new SqlConnection(connString("db1"))) cnn.Execute(sql);
+            }
+            //To Finish
             else
             {
-                string sql = @"DELETE FROM dbo.Tasks WHERE Id="+item.Id;
-                using (IDbConnection cnn = new SqlConnection(connString("db1")))
-                {
-                    cnn.Execute(sql);
-                }
+                string sql = @"DELETE FROM dbo.Tasks WHERE Id=" + item.Id;
+                using (IDbConnection cnn = new SqlConnection(connString("db1"))) cnn.Execute(sql);
             }
 
             return Index();
